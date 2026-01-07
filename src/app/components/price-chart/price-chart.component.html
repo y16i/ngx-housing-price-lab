@@ -1,0 +1,11 @@
+<div class="bg-gray-100 rounded-xl p-6 w-full">
+  <h3 class="text-lg font-bold text-gray-800 mb-4">Price Distribution</h3>
+  @if (data.length === 0) {
+    <div class="text-center py-8">
+      <p class="text-gray-600">No data available for the selected filters</p>
+    </div>
+  }
+  @if (data.length > 0) {
+    <div #chartContainer echarts [options]="chartOptions" style="height: 300px"></div>
+  }
+</div>

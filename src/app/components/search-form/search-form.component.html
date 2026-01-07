@@ -1,0 +1,81 @@
+<form (ngSubmit)="handleSearch()" class="space-y-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-8">Filters</h2>
+
+  <!-- Layout -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2"> Layout </label>
+    <select
+      [(ngModel)]="layout"
+      name="layout"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+    >
+      <option value="">All Layouts</option>
+      @for (l of LAYOUTS; track l) {
+        <option [value]="l">{{ l }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Year Range -->
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2"> Min Year </label>
+      <input
+        type="number"
+        [(ngModel)]="minYear"
+        name="minYear"
+        placeholder="0"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+      />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2"> Max Year </label>
+      <input
+        type="number"
+        [(ngModel)]="maxYear"
+        name="maxYear"
+        placeholder="50"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+      />
+    </div>
+  </div>
+
+  <!-- Location -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2"> Location </label>
+    <select
+      [(ngModel)]="location"
+      name="location"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+    >
+      <option value="">All Locations</option>
+      @for (loc of LOCATIONS; track loc) {
+        <option [value]="loc">{{ loc }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Floor -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2"> Floor </label>
+    <select
+      [(ngModel)]="floor"
+      name="floor"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+    >
+      <option value="">All Floors</option>
+      @for (f of FLOORS; track f) {
+        <option [value]="f">{{ f }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Search Button -->
+  <button
+    type="submit"
+    [disabled]="loading"
+    class="w-full bg-primary text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200 shadow-md hover:shadow-lg"
+  >
+    {{ loading ? 'Searching...' : 'Search Prices' }}
+  </button>
+</form>

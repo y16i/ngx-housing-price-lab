@@ -1,0 +1,39 @@
+<div class="min-h-screen bg-white">
+  <div class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <a routerLink="/" class="text-primary font-medium mb-4 inline-block hover:underline">
+        ← Back to Search
+      </a>
+      <h1 class="text-4xl font-bold text-gray-900">Analysis Results</h1>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="text-center py-12">
+        <p class="text-gray-600">Loading results...</p>
+      </div>
+    }
+
+    <!-- Results -->
+    @if (!loading && data.length > 0) {
+      <!-- Summary Cards -->
+      <app-summary-card #summaryCard></app-summary-card>
+
+      <!-- Price Chart -->
+      <div class="mt-8">
+        <app-price-chart [data]="data"></app-price-chart>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!loading && data.length === 0) {
+      <div class="text-center py-12">
+        <p class="text-gray-600 mb-4">No data available for the selected filters</p>
+        <a routerLink="/" class="text-primary font-medium hover:underline">
+          Try different filters
+        </a>
+      </div>
+    }
+  </div>
+</div>
