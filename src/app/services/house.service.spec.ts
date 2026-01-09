@@ -61,7 +61,9 @@ describe('HouseService', () => {
         expect(houses).toEqual(mockHouses);
       });
 
-      const req = httpMock.expectOne((request) => request.url.includes('http://localhost:3000/api/houses'));
+      const req = httpMock.expectOne((request) =>
+        request.url.includes('http://localhost:3000/api/houses')
+      );
       expect(req.request.method).toBe('GET');
       req.flush(mockHouses);
     });
@@ -90,8 +92,8 @@ describe('HouseService', () => {
         expect(houses.length).toBeGreaterThan(0);
       });
 
-      const req = httpMock.expectOne((request) =>
-        request.url.includes('layout=2LDK') && request.url.includes('location=Tokyo')
+      const req = httpMock.expectOne(
+        (request) => request.url.includes('layout=2LDK') && request.url.includes('location=Tokyo')
       );
       expect(req.request.method).toBe('GET');
       req.flush([mockHouses[0]]);
