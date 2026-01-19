@@ -7,7 +7,7 @@ import { House, Filters } from '../models/house.model';
   providedIn: 'root',
 })
 export class HouseService {
-  private apiUrl = 'http://localhost:3000/api/houses';
+  private apiUrl = 'https://autovalue-insight-2w7oequsua-an.a.run.app/api/houses';
 
   constructor(private http: HttpClient) {}
 
