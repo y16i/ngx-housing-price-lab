@@ -109,37 +109,23 @@ gcloud run deploy ngx-housing-price-lab --image gcr.io/PROJECT_ID/ngx-housing-pr
 
 ### API Endpoint Setup
 
-Update API URL for different environments in `src/app/services/house.service.ts`:
+The API URL is configured in [src/app/services/house.service.ts](src/app/services/house.service.ts):
 
 ```typescript
-const environment = {
-  production: true,
-  apiUrl: 'https://your-backend-api.com/api/houses'
-};
-
 export class HouseService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = 'https://autovalue-insight-2w7oequsua-an.a.run.app/api/houses';
   // ...
 }
 ```
 
-Or use environment files:
+To change the backend API URL:
+1. Update the `apiUrl` value in `src/app/services/house.service.ts`
+2. Rebuild the application: `npm run build`
+3. Redeploy the Docker container
 
-`src/environments/environment.ts`:
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000/api/houses'
-};
-```
-
-`src/environments/environment.prod.ts`:
-```typescript
-export const environment = {
-  production: true,
-  apiUrl: 'https://api.production.com/api/houses'
-};
-```
+For different environments (local dev vs production), you can:
+- **Local dev**: Change `apiUrl` to `http://localhost:3000/api/houses`
+- **Production**: Change `apiUrl` to your deployed Next.js backend URL
 
 ## CORS Configuration
 
