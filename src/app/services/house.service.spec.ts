@@ -62,7 +62,7 @@ describe('HouseService', () => {
       });
 
       const req = httpMock.expectOne((request) =>
-        request.url.includes('http://localhost:3000/api/houses')
+        request.url.includes('https://autovalue-insight-2w7oequsua-an.a.run.app/api/houses')
       );
       expect(req.request.method).toBe('GET');
       req.flush(mockHouses);
