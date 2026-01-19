@@ -1,0 +1,97 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: "main"
+
+env:
+  REGISTRY: us-docker.pkg.dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: github-actions@housing-prie-lab.iam.gserviceaccount.com
+          project_id: 'housing-prie-lab'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker auth
+        run: gcloud auth configure-docker us-docker.pkg.dev --quiet
+
+      - name: Build and push image
+        run: |
+          IMAGE=${{ env.REGISTRY }}/housing-prie-lab/gcr.io/ngx-housing-price-lab:${{ github.sha }}
+          echo ${IMAGE}
+          docker build -t $IMAGE .
+          docker push $IMAGE
+          echo "IMAGE_URL=$IMAGE" >> $GITHUB_ENV
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}"
+
+      - name: Terraform Apply
+        working-directory: infra/terraform
+        env:
+          TF_VAR_project_id: ${{ secrets.GCP_PROJECT }}
+          TF_VAR_image_url: ${{ env.IMAGE_URL }}
+          TF_VAR_service_name: ngx-housing-price-lab
+        run: terraform apply -auto-approve
