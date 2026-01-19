@@ -18,6 +18,8 @@ RUN npm run build
 # Runtime stage
 FROM node:20-alpine
 
+ARG API_URL=http://localhost:3000/api/houses
+
 WORKDIR /app
 
 # Install http-server globally to serve static files
@@ -32,6 +34,9 @@ EXPOSE 8080
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/ || exit 1
+
+# Create config.json with API_URL
+RUN echo '{"apiUrl": "'${API_URL}'"}' > dist/config.json
 
 # Start http-server to serve the built application
 CMD ["http-server", "dist", "-p", "8080", "--gzip"]

@@ -74,10 +74,12 @@ jobs:
         run: gcloud auth configure-docker us-docker.pkg.dev --quiet
 
       - name: Build and push image
+        env:
+          API_URL: ${{ secrets.API_URL }}
         run: |
           IMAGE=${{ env.REGISTRY }}/housing-prie-lab/gcr.io/ngx-housing-price-lab:${{ github.sha }}
           echo ${IMAGE}
-          docker build -t $IMAGE .
+          docker build -t $IMAGE --build-arg API_URL=${API_URL} .
           docker push $IMAGE
           echo "IMAGE_URL=$IMAGE" >> $GITHUB_ENV
 

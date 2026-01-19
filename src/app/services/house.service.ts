@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { House, Filters } from '../models/house.model';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HouseService {
-  private apiUrl = 'https://autovalue-insight-2w7oequsua-an.a.run.app/api/houses';
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private configService: ConfigService
+  ) {}
 
   getHouses(filters: Filters): Observable<House[]> {
     let params = new URLSearchParams();
@@ -20,7 +22,8 @@ export class HouseService {
     if (filters.location) params.append('location', filters.location);
     if (filters.floor) params.append('floor', filters.floor);
 
-    return this.http.get<House[]>(`${this.apiUrl}?${params.toString()}`);
+    const apiUrl = this.configService.getApiUrl();
+    return this.http.get<House[]>(`${apiUrl}?${params.toString()}`);
   }
 
   calcStats(houses: House[]) {
