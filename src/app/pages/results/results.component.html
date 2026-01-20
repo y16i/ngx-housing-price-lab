@@ -16,7 +16,7 @@
     }
 
     <!-- Results -->
-    @if (!loading && data.length > 0) {
+    @if (!loading() && data().length > 0) {
       <!-- Summary Cards -->
       <app-summary-card #summaryCard></app-summary-card>
 
