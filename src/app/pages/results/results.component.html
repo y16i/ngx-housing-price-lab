@@ -9,7 +9,7 @@
     </div>
 
     <!-- Loading State -->
-    @if (loading) {
+    @if (loading()) {
       <div class="text-center py-12">
         <p class="text-gray-600">Loading results...</p>
       </div>
@@ -22,12 +22,12 @@
 
       <!-- Price Chart -->
       <div class="mt-8">
-        <app-price-chart [data]="data"></app-price-chart>
+        <app-price-chart [data]="data()"></app-price-chart>
       </div>
     }
 
     <!-- Empty State -->
-    @if (!loading && data.length === 0) {
+    @if (!loading() && data().length === 0) {
       <div class="text-center py-12">
         <p class="text-gray-600 mb-4">No data available for the selected filters</p>
         <a routerLink="/" class="text-primary font-medium hover:underline">

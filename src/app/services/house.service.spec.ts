@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HouseService } from './house.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { House, Filters } from '../models/house.model';
 
 describe('HouseService', () => {
@@ -36,8 +36,7 @@ describe('HouseService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [HouseService],
+      providers: [HouseService, provideHttpClientTesting()],
     });
 
     service = TestBed.inject(HouseService);

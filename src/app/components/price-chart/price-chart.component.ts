@@ -10,7 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts';
-import { House } from '../../models/house.model';
+import { House } from 'models/house.model';
 
 @Component({
   selector: 'app-price-chart',

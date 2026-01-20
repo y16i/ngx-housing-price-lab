@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ViewChild, signal, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { HouseService } from '../../services/house.service';
-import { House, Filters, Stats } from '../../models/house.model';
-import { SummaryCardComponent } from '../../components/summary-card/summary-card.component';
-import { PriceChartComponent } from '../../components/price-chart/price-chart.component';
+import { PriceChartComponent } from 'components/price-chart/price-chart.component';
+import { SummaryCardComponent } from 'components/summary-card/summary-card.component';
+import { Filters, House } from 'models/house.model';
+import { HouseService } from 'services/house.service';
 
 @Component({
   selector: 'app-results',
@@ -16,43 +16,45 @@ import { PriceChartComponent } from '../../components/price-chart/price-chart.co
 export class ResultsComponent implements OnInit {
   @ViewChild('summaryCard') summaryCard!: SummaryCardComponent;
 
-  data: House[] = [];
-  loading = true;
-  filters: Filters = {};
+  private route = inject(ActivatedRoute);
+  private houseService = inject(HouseService);
 
-  constructor(
-    private route: ActivatedRoute,
-    private houseService: HouseService
-  ) {}
+  data = signal<House[]>([]);
+  loading = signal(true);
+  filters = signal<Filters>({});
+
+  constructor() {
+    effect(() => {
+      this.fetchData();
+    });
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
-      this.filters = {
+      this.filters.set({
         layout: params['layout'] || null,
         minYear: params['minYear'] || null,
         maxYear: params['maxYear'] || null,
         location: params['location'] || null,
         floor: params['floor'] || null,
-      };
-
-      this.fetchData();
+      });
     });
   }
 
   private fetchData() {
-    this.loading = true;
-    this.houseService.getHouses(this.filters).subscribe({
+    this.loading.set(true);
+    this.houseService.getHouses(this.filters()).subscribe({
       next: (houses) => {
-        this.data = houses;
+        this.data.set(houses);
         const stats = this.houseService.calcStats(houses);
         if (this.summaryCard) {
-          this.summaryCard.setData(stats, this.filters);
+          this.summaryCard.setData(stats, this.filters());
         }
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error) => {
         console.error('Failed to fetch data:', error);
-        this.loading = false;
+        this.loading.set(false);
       },
     });
   }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Stats } from '../../models/house.model';
+import { Stats } from 'models/house.model';
 
 interface SummaryCardProps {
   stats: Stats;

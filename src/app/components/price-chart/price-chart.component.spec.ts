@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PriceChartComponent } from './price-chart.component';
-import { House } from '../../models/house.model';
+import { House } from 'models/house.model';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
 describe('PriceChartComponent', () => {

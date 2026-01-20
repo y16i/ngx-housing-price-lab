@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ResultsComponent } from './results.component';
 import { ActivatedRoute } from '@angular/router';
-import { HouseService } from '../../services/house.service';
+import { HouseService } from 'services/house.service';
 import { of } from 'rxjs';
-import { House } from '../../models/house.model';
+import { House } from 'models/house.model';
 import { provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 
@@ -76,9 +76,9 @@ describe('ResultsComponent', () => {
   });
 
   it('should initialize with default values', () => {
-    expect(component.data).toEqual([]);
-    expect(component.loading).toBe(true);
-    expect(component.filters).toEqual({});
+    expect(component.data()).toEqual([]);
+    expect(component.loading()).toBe(true);
+    expect(component.filters()).toEqual({});
   });
 
   it('should fetch data on init', () => {
@@ -91,8 +91,8 @@ describe('ResultsComponent', () => {
     fixture.detectChanges();
 
     setTimeout(() => {
-      expect(component.data.length).toBeGreaterThan(0);
-      expect(component.data).toEqual(mockHouses);
+      expect(component.data().length).toBeGreaterThan(0);
+      expect(component.data()).toEqual(mockHouses);
       done();
     }, 0);
   });
@@ -101,7 +101,7 @@ describe('ResultsComponent', () => {
     fixture.detectChanges();
 
     setTimeout(() => {
-      expect(component.loading).toBe(false);
+      expect(component.loading()).toBe(false);
       done();
     }, 0);
   });
@@ -110,11 +110,11 @@ describe('ResultsComponent', () => {
     fixture.detectChanges();
 
     setTimeout(() => {
-      expect(component.filters.layout).toBe('2LDK');
-      expect(component.filters.location).toBe('Tokyo');
-      expect(component.filters.minYear).toBe('2010');
-      expect(component.filters.maxYear).toBe('2020');
-      expect(component.filters.floor).toBe('3');
+      expect(component.filters().layout).toBe('2LDK');
+      expect(component.filters().location).toBe('Tokyo');
+      expect(component.filters().minYear).toBe('2010');
+      expect(component.filters().maxYear).toBe('2020');
+      expect(component.filters().floor).toBe('3');
       done();
     }, 0);
   });
@@ -162,8 +162,8 @@ describe('ResultsComponent', () => {
     newFixture.detectChanges();
 
     setTimeout(() => {
-      expect(newComponent.filters.layout).toBeNull();
-      expect(newComponent.filters.location).toBeNull();
+      expect(newComponent.filters().layout).toBeNull();
+      expect(newComponent.filters().location).toBeNull();
       done();
     }, 0);
   });

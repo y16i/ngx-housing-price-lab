@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SummaryCardComponent } from './summary-card.component';
-import { Stats } from '../../models/house.model';
+import { Stats } from 'models/house.model';
 
 describe('SummaryCardComponent', () => {
   let component: SummaryCardComponent;
