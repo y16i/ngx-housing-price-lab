@@ -1,5 +1,7 @@
 # Demo: Housing Price Analysis
-A Angular frontend application for analyzing housing prices with filtering and visualization using Echarts. The backend is Next.js project housing-price-lab repo.
+An Angular frontend application for analyzing housing prices, featuring filtering and visualization powered by ECharts. The backend is a Next.js project (housing-price-lab repository).
+
+Running at https://ngx-housing-price-lab-2w7oequsua-an.a.run.app/
 
 ### Tech Stack
 
