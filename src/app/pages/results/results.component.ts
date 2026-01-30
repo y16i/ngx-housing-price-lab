@@ -1,27 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, signal, effect, inject, OnInit } from '@angular/core';
+import { Component, signal, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { PriceChartComponent } from 'components/price-chart/price-chart.component';
 import { SummaryCardComponent } from 'components/summary-card/summary-card.component';
-import { Filters, House } from 'models/house.model';
+import { FilterSidebarComponent } from 'components/filter-sidebar/filter-sidebar.component';
+import { FilterModalComponent } from 'components/filter-modal/filter-modal.component';
+import { Filters, House, Stats } from 'models/house.model';
 import { HouseService } from 'services/house.service';
 
 @Component({
   selector: 'app-results',
   standalone: true,
-  imports: [CommonModule, RouterModule, SummaryCardComponent, PriceChartComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    SummaryCardComponent,
+    PriceChartComponent,
+    FilterSidebarComponent,
+    FilterModalComponent,
+  ],
   templateUrl: './results.component.html',
   styleUrl: './results.component.scss',
 })
 export class ResultsComponent implements OnInit {
-  @ViewChild('summaryCard') summaryCard!: SummaryCardComponent;
-
   private route = inject(ActivatedRoute);
   private houseService = inject(HouseService);
 
   data = signal<House[]>([]);
+  stats = signal<Stats>({ avg: 0, median: 0, min: 0, max: 0, count: 0 });
   loading = signal(true);
   filters = signal<Filters>({});
+  isFilterModalOpen = signal(false);
+
+  layout = signal('');
+  minYear = signal('');
+  maxYear = signal('');
+  location = signal('');
+  floor = signal('');
 
   constructor() {
     effect(() => {
@@ -31,6 +46,12 @@ export class ResultsComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
+      this.layout.set(params['layout'] || '');
+      this.minYear.set(params['minYear'] || '');
+      this.maxYear.set(params['maxYear'] || '');
+      this.location.set(params['location'] || '');
+      this.floor.set(params['floor'] || '');
+
       this.filters.set({
         layout: params['layout'] || null,
         minYear: params['minYear'] || null,
@@ -41,18 +62,42 @@ export class ResultsComponent implements OnInit {
     });
   }
 
+  handleFilterChange(filters: Filters) {
+    this.layout.set((filters.layout as string) || '');
+    this.minYear.set((filters.minYear as string) || '');
+    this.maxYear.set((filters.maxYear as string) || '');
+    this.location.set((filters.location as string) || '');
+    this.floor.set((filters.floor as string) || '');
+    this.filters.set(filters);
+  }
+
+  handleReset() {
+    this.layout.set('');
+    this.minYear.set('');
+    this.maxYear.set('');
+    this.location.set('');
+    this.floor.set('');
+    this.filters.set({});
+  }
+
+  openFilterModal() {
+    this.isFilterModalOpen.set(true);
+  }
+
+  closeFilterModal() {
+    this.isFilterModalOpen.set(false);
+  }
+
   private fetchData() {
     this.loading.set(true);
     this.houseService.getHouses(this.filters()).subscribe({
       next: (houses) => {
         this.data.set(houses);
-        const stats = this.houseService.calcStats(houses);
-        if (this.summaryCard) {
-          this.summaryCard.setData(stats, this.filters());
-        }
+        const calculatedStats = this.houseService.calcStats(houses);
+        this.stats.set(calculatedStats);
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Failed to fetch data:', error);
         this.loading.set(false);
       },

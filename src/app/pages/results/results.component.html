@@ -1,10 +1,19 @@
 <div class="min-h-screen bg-white">
-  <div class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-    <!-- Header -->
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <!-- Header with Filter Button for Mobile -->
     <div class="mb-8">
-      <a routerLink="/" class="text-primary font-medium mb-4 inline-block hover:underline">
-        ← Back to Search
-      </a>
+      <div class="flex items-center justify-between mb-4">
+        <a routerLink="/" class="text-primary font-medium hover:underline">
+          ← Back to Home
+        </a>
+        <!-- Mobile Filter Button -->
+        <button
+          (click)="openFilterModal()"
+          class="lg:hidden bg-primary text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+        >
+          Filter
+        </button>
+      </div>
       <h1 class="text-4xl font-bold text-gray-900">Analysis Results</h1>
     </div>
 
@@ -15,25 +24,60 @@
       </div>
     }
 
-    <!-- Results -->
-    @if (!loading() && data().length > 0) {
-      <!-- Summary Cards -->
-      <app-summary-card #summaryCard></app-summary-card>
+    <!-- Results with Sidebar -->
+    @if (!loading()) {
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Left Sidebar - Filters (Hidden on Mobile) -->
+        <div class="hidden lg:block lg:col-span-1">
+          <app-filter-sidebar
+            [layout]="layout()"
+            [minYear]="minYear()"
+            [maxYear]="maxYear()"
+            [location]="location()"
+            [floor]="floor()"
+            (filterChange)="handleFilterChange($event)"
+            (filterReset)="handleReset()"
+          ></app-filter-sidebar>
+        </div>
 
-      <!-- Price Chart -->
-      <div class="mt-8">
-        <app-price-chart [data]="data()"></app-price-chart>
-      </div>
-    }
+        <!-- Right Side - Results -->
+        <div class="lg:col-span-3">
+          <!-- Results Content -->
+          @if (data().length > 0) {
+            <div>
+              <!-- Summary Cards -->
+              <app-summary-card
+                [stats]="stats()"
+                [filters]="filters()"
+              ></app-summary-card>
 
-    <!-- Empty State -->
-    @if (!loading() && data().length === 0) {
-      <div class="text-center py-12">
-        <p class="text-gray-600 mb-4">No data available for the selected filters</p>
-        <a routerLink="/" class="text-primary font-medium hover:underline">
-          Try different filters
-        </a>
+              <!-- Price Chart -->
+              <div class="mt-8">
+                <app-price-chart [data]="data()"></app-price-chart>
+              </div>
+            </div>
+          } @else {
+            <!-- Empty State -->
+            <div class="text-center py-12">
+              <p class="text-gray-600 mb-4">No data available for the selected filters.<br>
+                Try different filters</p>
+            </div>
+          }
+        </div>
       </div>
     }
   </div>
+
+  <!-- Filter Modal (Mobile) -->
+  <app-filter-modal
+    [isOpen]="isFilterModalOpen()"
+    [layout]="layout()"
+    [minYear]="minYear()"
+    [maxYear]="maxYear()"
+    [location]="location()"
+    [floor]="floor()"
+    (close)="closeFilterModal()"
+    (filterChange)="handleFilterChange($event)"
+    (filterReset)="handleReset()"
+  ></app-filter-modal>
 </div>

@@ -1,16 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Stats } from 'models/house.model';
 
-interface SummaryCardProps {
-  stats: Stats;
-  filters: {
-    layout?: string | null;
-    minYear?: string | null;
-    maxYear?: string | null;
-    location?: string | null;
-    floor?: string | null;
-  };
+interface FilterType {
+  layout?: string | null;
+  minYear?: string | null;
+  maxYear?: string | null;
+  location?: string | null;
+  floor?: string | null;
 }
 
 @Component({
@@ -21,25 +18,19 @@ interface SummaryCardProps {
   styleUrl: './summary-card.component.scss',
 })
 export class SummaryCardComponent {
-  stats: Stats = { avg: 0, median: 0, min: 0, max: 0, count: 0 };
-  filters: SummaryCardProps['filters'] = {};
-  filterText = '';
+  stats = input<Stats>({ avg: 0, median: 0, min: 0, max: 0, count: 0 });
+  filters = input<FilterType>({});
 
-  setData(stats: Stats, filters: SummaryCardProps['filters']) {
-    this.stats = stats;
-    this.filters = filters;
-    this.updateFilterText();
-  }
-
-  private updateFilterText() {
+  filterText = computed(() => {
+    const filterVal = this.filters();
     const parts = [
-      this.filters.layout && this.filters.layout,
-      this.filters.minYear &&
-        this.filters.maxYear &&
-        `${this.filters.minYear}-${this.filters.maxYear}y`,
-      this.filters.location && this.filters.location,
-      this.filters.floor && `${this.filters.floor}F`,
+      filterVal.layout && filterVal.layout,
+      filterVal.minYear &&
+        filterVal.maxYear &&
+        `${filterVal.minYear}-${filterVal.maxYear}y`,
+      filterVal.location && filterVal.location,
+      filterVal.floor && `${filterVal.floor}F`,
     ].filter(Boolean);
-    this.filterText = parts.join(' | ');
-  }
+    return parts.join(' | ');
+  });
 }
