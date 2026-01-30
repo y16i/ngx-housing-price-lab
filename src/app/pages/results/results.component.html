@@ -3,7 +3,9 @@
     <!-- Header with Filter Button for Mobile -->
     <div class="mb-8">
       <div class="flex items-center justify-between mb-4">
-        <a routerLink="/" class="text-primary font-medium hover:underline"> ← Back to Home </a>
+        <a routerLink="/" class="text-primary font-medium hover:underline">
+          ← Back to Home
+        </a>
         <!-- Mobile Filter Button -->
         <button
           (click)="openFilterModal()"
@@ -44,7 +46,14 @@
           @if (data().length > 0) {
             <div>
               <!-- Summary Cards -->
+<<<<<<< HEAD
               <app-summary-card [stats]="stats()" [filters]="filters()"></app-summary-card>
+=======
+              <app-summary-card
+                [stats]="stats()"
+                [filters]="filters()"
+              ></app-summary-card>
+>>>>>>> 517c348 (feat: add filters on result page)
 
               <!-- Price Chart -->
               <div class="mt-8">
@@ -54,10 +63,15 @@
           } @else {
             <!-- Empty State -->
             <div class="text-center py-12">
+<<<<<<< HEAD
               <p class="text-gray-600 mb-4">
                 No data available for the selected filters.<br />
                 Try different filters
               </p>
+=======
+              <p class="text-gray-600 mb-4">No data available for the selected filters.<br>
+                Try different filters</p>
+>>>>>>> 517c348 (feat: add filters on result page)
             </div>
           }
         </div>
