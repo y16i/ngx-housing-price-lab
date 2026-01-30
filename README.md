@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-# NGX Housing Price Lab
-=======
 # Demo: Housing Price Analysis
 An Angular frontend application for analyzing housing prices, featuring filtering and visualization powered by ECharts. The backend is a Next.js project (housing-price-lab repository).
 
 Running at https://ngx-housing-price-lab-2w7oequsua-an.a.run.app/
->>>>>>> 17f0ec2 (feat: add hosting url)
 
 A full‑stack Angular web application that visualizes housing price trends across Japan.  
 This project demonstrates enterprise‑grade frontend development, modular architecture, cloud deployment, and Infrastructure as Code using Terraform.
