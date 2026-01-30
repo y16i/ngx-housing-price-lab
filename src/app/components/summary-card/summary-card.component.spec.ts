@@ -5,7 +5,12 @@ import { Stats } from 'models/house.model';
 
 @Component({
   selector: 'app-test-wrapper',
-  template: ` <app-summary-card [stats]="stats" [filters]="filters"></app-summary-card> `,
+  template: `
+    <app-summary-card
+      [stats]="stats"
+      [filters]="filters"
+    ></app-summary-card>
+  `,
   standalone: true,
   imports: [SummaryCardComponent],
 })
