@@ -25,17 +25,7 @@ export class SummaryCardComponent {
     const filterVal = this.filters();
     const parts = [
       filterVal.layout && filterVal.layout,
-<<<<<<< HEAD
-<<<<<<< HEAD
       filterVal.minYear && filterVal.maxYear && `${filterVal.minYear}-${filterVal.maxYear}y`,
-=======
-      filterVal.minYear &&
-        filterVal.maxYear &&
-        `${filterVal.minYear}-${filterVal.maxYear}y`,
->>>>>>> 517c348 (feat: add filters on result page)
-=======
-      filterVal.minYear && filterVal.maxYear && `${filterVal.minYear}-${filterVal.maxYear}y`,
->>>>>>> b176aee (feat: add filters on result page)
       filterVal.location && filterVal.location,
       filterVal.floor && `${filterVal.floor}F`,
     ].filter(Boolean);
