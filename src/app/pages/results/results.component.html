@@ -48,7 +48,30 @@
 
               <!-- Price Chart -->
               <div class="mt-8">
-                <app-price-chart [data]="data()"></app-price-chart>
+                <app-price-chart [data]="data()" (barClick)="handleBarClick($event)"></app-price-chart>
+              </div>
+
+              <!-- Price Filter Display and Clear Button -->
+              @if (priceRange()) {
+                <div class="mt-6 flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p class="text-sm text-gray-700">
+                    Filtering by price range:
+                    <span class="font-semibold"
+                      >¥{{ (priceRange()?.min | number: '1.0-2') }}M - ¥{{ (priceRange()?.max | number: '1.0-2') }}M</span
+                    >
+                  </p>
+                  <button
+                    (click)="handleClearPriceFilter()"
+                    class="text-sm bg-white text-blue-600 border border-blue-200 px-3 py-1 rounded hover:bg-blue-50 transition-colors"
+                  >
+                    Clear Filter
+                  </button>
+                </div>
+              }
+
+              <!-- Houses Table -->
+              <div class="mt-8">
+                <app-houses-table [data]="filteredData"></app-houses-table>
               </div>
             </div>
           } @else {

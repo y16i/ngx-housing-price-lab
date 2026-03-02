@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, signal, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { PriceChartComponent } from 'components/price-chart/price-chart.component';
+import { PriceChartComponent, PriceRange } from 'components/price-chart/price-chart.component';
 import { SummaryCardComponent } from 'components/summary-card/summary-card.component';
+import { HousesTableComponent } from 'components/houses-table/houses-table.component';
 import { FilterSidebarComponent } from 'components/filter-sidebar/filter-sidebar.component';
 import { FilterModalComponent } from 'components/filter-modal/filter-modal.component';
 import { Filters, House, Stats } from 'models/house.model';
@@ -16,6 +17,7 @@ import { HouseService } from 'services/house.service';
     RouterModule,
     SummaryCardComponent,
     PriceChartComponent,
+    HousesTableComponent,
     FilterSidebarComponent,
     FilterModalComponent,
   ],
@@ -37,6 +39,7 @@ export class ResultsComponent implements OnInit {
   maxYear = signal('');
   location = signal('');
   floor = signal('');
+  priceRange = signal<PriceRange | null>(null);
 
   constructor() {
     effect(() => {
@@ -68,6 +71,7 @@ export class ResultsComponent implements OnInit {
     this.maxYear.set((filters.maxYear as string) || '');
     this.location.set((filters.location as string) || '');
     this.floor.set((filters.floor as string) || '');
+    this.priceRange.set(null); // Reset price range when filters change
     this.filters.set(filters);
   }
 
@@ -77,6 +81,7 @@ export class ResultsComponent implements OnInit {
     this.maxYear.set('');
     this.location.set('');
     this.floor.set('');
+    this.priceRange.set(null);
     this.filters.set({});
   }
 
@@ -86,6 +91,24 @@ export class ResultsComponent implements OnInit {
 
   closeFilterModal() {
     this.isFilterModalOpen.set(false);
+  }
+
+  handleBarClick(priceRange: PriceRange) {
+    this.priceRange.set(priceRange);
+  }
+
+  handleClearPriceFilter() {
+    this.priceRange.set(null);
+  }
+
+  get filteredData(): House[] {
+    const range = this.priceRange();
+    if (!range) {
+      return this.data();
+    }
+    return this.data().filter(
+      (house) => house.price_million_yen >= range.min && house.price_million_yen <= range.max
+    );
   }
 
   private fetchData() {
