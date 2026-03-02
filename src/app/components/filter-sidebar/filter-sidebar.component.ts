@@ -1,9 +1,9 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Filters } from 'models/house.model';
 
-const LAYOUTS = ['1DK', '2LDK', '3DK', '3LDK', '4LDK', '5LDK'];
+const LAYOUTS = ['1DK', '1LDK', '2LDK', '3DK', '3LDK', '4LDK', '5LDK'];
 const LOCATIONS = [
   'Shibuya, Tokyo',
   'Kita, Osaka',
@@ -25,7 +25,7 @@ const FLOORS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   templateUrl: './filter-sidebar.component.html',
   styleUrl: './filter-sidebar.component.scss',
 })
-export class FilterSidebarComponent {
+export class FilterSidebarComponent implements OnInit, OnChanges {
   LAYOUTS = LAYOUTS;
   LOCATIONS = LOCATIONS;
   FLOORS = FLOORS;
@@ -64,7 +64,37 @@ export class FilterSidebarComponent {
     this.localFloor = this.floor();
   }
 
-  handleFilterChange() {
+  handleLayoutChange(event: Event) {
+    const newValue = (event.target as HTMLSelectElement).value;
+    this.localLayout = newValue;
+    this.emitFilters();
+  }
+
+  handleMinYearChange(event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    this.localMinYear = newValue;
+    this.emitFilters();
+  }
+
+  handleMaxYearChange(event: Event) {
+    const newValue = (event.target as HTMLInputElement).value;
+    this.localMaxYear = newValue;
+    this.emitFilters();
+  }
+
+  handleLocationChange(event: Event) {
+    const newValue = (event.target as HTMLSelectElement).value;
+    this.localLocation = newValue;
+    this.emitFilters();
+  }
+
+  handleFloorChange(event: Event) {
+    const newValue = (event.target as HTMLSelectElement).value;
+    this.localFloor = newValue;
+    this.emitFilters();
+  }
+
+  private emitFilters() {
     const filters: Filters = {
       layout: this.localLayout || null,
       minYear: this.localMinYear || null,

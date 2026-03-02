@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Filters } from 'models/house.model';
@@ -25,7 +25,7 @@ const FLOORS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   templateUrl: './filter-modal.component.html',
   styleUrl: './filter-modal.component.scss',
 })
-export class FilterModalComponent {
+export class FilterModalComponent implements OnInit, OnChanges {
   LAYOUTS = LAYOUTS;
   LOCATIONS = LOCATIONS;
   FLOORS = FLOORS;

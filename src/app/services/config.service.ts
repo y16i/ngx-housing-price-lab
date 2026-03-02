@@ -14,7 +14,6 @@ export class ConfigService {
     return firstValueFrom(this.http.get('/config.json'))
       .then((data: any) => {
         this.config = data;
-        console.log('Config loaded:', this.config);
       })
       .catch((error) => {
         console.error('Failed to load config.json:', error);

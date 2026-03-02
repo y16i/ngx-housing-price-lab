@@ -1,0 +1,92 @@
+<div class="bg-white rounded-xl overflow-hidden shadow-lg">
+  <div class="overflow-x-auto">
+    <table class="min-w-full">
+      <thead class="bg-gray-100 border-b border-gray-200">
+        <tr>
+          <th
+            (click)="handleSort('location')"
+            class="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <div class="flex items-center">
+              Location
+              <span [ngClass]="getSortIconColor('location')" class="ml-1">{{
+                getSortIcon('location')
+              }}</span>
+            </div>
+          </th>
+          <th
+            (click)="handleSort('layout')"
+            class="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <div class="flex items-center">
+              Layout
+              <span [ngClass]="getSortIconColor('layout')" class="ml-1">{{
+                getSortIcon('layout')
+              }}</span>
+            </div>
+          </th>
+          <th
+            (click)="handleSort('price')"
+            class="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <div class="flex items-center">
+              Price (¥M)
+              <span [ngClass]="getSortIconColor('price')" class="ml-1">{{
+                getSortIcon('price')
+              }}</span>
+            </div>
+          </th>
+          <th
+            (click)="handleSort('age')"
+            class="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <div class="flex items-center">
+              Age (Years)
+              <span [ngClass]="getSortIconColor('age')" class="ml-1">{{ getSortIcon('age') }}</span>
+            </div>
+          </th>
+          <th
+            (click)="handleSort('floor')"
+            class="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <div class="flex items-center">
+              Floor
+              <span [ngClass]="getSortIconColor('floor')" class="ml-1">{{
+                getSortIcon('floor')
+              }}</span>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (house of sortedData(); let i = $index; track house.id) {
+          <tr
+            [ngClass]="{
+              'bg-white': i % 2 === 0,
+              'bg-gray-50': i % 2 !== 0,
+            }"
+            class="border-b border-gray-200 transition-colors hover:bg-blue-50"
+          >
+            <td class="px-6 py-4 text-sm text-gray-900">{{ house.location }}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">{{ house.layout }}</td>
+            <td class="px-6 py-4 text-sm font-medium text-gray-900">
+              ¥{{ house.price_million_yen | number: '1.2-2' }}M
+            </td>
+            <td class="px-6 py-4 text-sm text-gray-900">{{ house.age_years }}</td>
+            <td class="px-6 py-4 text-sm text-gray-900">{{ house.floor }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+    <p class="text-sm text-gray-600">
+      Showing <span class="font-semibold text-gray-900">{{ data.length }}</span> houses
+    </p>
+  </div>
+  @if (data.length === 0) {
+    <div class="bg-white rounded-xl p-8 text-center">
+      <p class="text-gray-600">No houses to display</p>
+    </div>
+  }
+</div>

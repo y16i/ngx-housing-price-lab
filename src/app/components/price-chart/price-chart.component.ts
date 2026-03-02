@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   ViewChild,
   ElementRef,
   AfterViewInit,
@@ -12,6 +14,11 @@ import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { House } from 'models/house.model';
 
+export interface PriceRange {
+  min: number;
+  max: number;
+}
+
 @Component({
   selector: 'app-price-chart',
   standalone: true,
@@ -21,9 +28,11 @@ import { House } from 'models/house.model';
 })
 export class PriceChartComponent implements AfterViewInit, OnChanges {
   @Input() data: House[] = [];
+  @Output() barClick = new EventEmitter<PriceRange>();
   @ViewChild('chartContainer') chartContainer!: ElementRef<HTMLDivElement>;
 
   chartOptions: echarts.EChartsOption = {};
+  private chartInstance: echarts.ECharts | null | undefined = null;
 
   ngAfterViewInit() {
     if (this.data.length > 0) {
@@ -46,19 +55,22 @@ export class PriceChartComponent implements AfterViewInit, OnChanges {
     const min = Math.min(...this.data.map((h) => h.price_million_yen));
     const max = Math.max(...this.data.map((h) => h.price_million_yen));
     const bucketSize = Math.ceil((max - min + 1) / 8);
-    const buckets: Record<string, number> = {};
+    const buckets: Record<string, { count: number; min: number; max: number }> = {};
 
     this.data.forEach((house) => {
       const bucketIndex = Math.floor((house.price_million_yen - min) / bucketSize);
-      const label = `¥${Math.round(min + bucketIndex * bucketSize)}-${Math.round(
-        min + (bucketIndex + 1) * bucketSize
-      )}M`;
+      const bucketMin = min + bucketIndex * bucketSize;
+      const bucketMax = min + (bucketIndex + 1) * bucketSize;
+      const label = `¥${Math.round(bucketMin)}-${Math.round(bucketMax)}M`;
 
-      buckets[label] = (buckets[label] || 0) + 1;
+      if (!buckets[label]) {
+        buckets[label] = { count: 0, min: bucketMin, max: bucketMax };
+      }
+      buckets[label].count += 1;
     });
 
     const labels = Object.keys(buckets);
-    const counts = Object.values(buckets);
+    const counts = labels.map((label) => buckets[label].count);
 
     this.chartOptions = {
       color: ['#2563eb'],
@@ -96,5 +108,27 @@ export class PriceChartComponent implements AfterViewInit, OnChanges {
         },
       ],
     };
+
+    // Set up click handler after chart is ready
+    setTimeout(() => {
+      const chartElement = this.chartContainer?.nativeElement;
+      if (chartElement) {
+        this.chartInstance = echarts.getInstanceByDom(chartElement);
+        if (this.chartInstance) {
+          // Remove previous listeners
+          this.chartInstance.off('click');
+
+          // Add click listener
+          this.chartInstance.on('click', (params: any) => {
+            if (params.componentSubType === 'bar') {
+              const dataIndex = params.dataIndex;
+              const label = labels[dataIndex];
+              const range = buckets[label];
+              this.barClick.emit({ min: range.min, max: range.max });
+            }
+          });
+        }
+      }
+    }, 100);
   }
 }
