@@ -117,7 +117,7 @@ export class PriceChartComponent implements AfterViewInit, OnChanges {
         if (this.chartInstance) {
           // Remove previous listeners
           this.chartInstance.off('click');
-          
+
           // Add click listener
           this.chartInstance.on('click', (params: any) => {
             if (params.componentSubType === 'bar') {
@@ -132,4 +132,3 @@ export class PriceChartComponent implements AfterViewInit, OnChanges {
     }, 100);
   }
 }
-

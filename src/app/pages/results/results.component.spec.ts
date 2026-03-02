@@ -208,7 +208,9 @@ describe('ResultsComponent', () => {
     component.priceRange.set({ min: 45, max: 65 });
 
     const filtered = component.filteredData;
-    expect(filtered.every((h) => h.price_million_yen >= 45 && h.price_million_yen <= 65)).toBe(true);
+    expect(filtered.every((h) => h.price_million_yen >= 45 && h.price_million_yen <= 65)).toBe(
+      true
+    );
   });
 
   it('should open filter modal', () => {
@@ -280,9 +282,7 @@ describe('ResultsComponent', () => {
           useValue: {
             getHouses: jasmine
               .createSpy('getHouses')
-              .and.returnValue(
-                throwError(() => new Error('API Error'))
-              ),
+              .and.returnValue(throwError(() => new Error('API Error'))),
             calcStats: jasmine.createSpy('calcStats').and.returnValue({
               avg: 0,
               median: 0,

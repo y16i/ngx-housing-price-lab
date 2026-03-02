@@ -42,9 +42,7 @@
           >
             <div class="flex items-center">
               Age (Years)
-              <span [ngClass]="getSortIconColor('age')" class="ml-1">{{
-                getSortIcon('age')
-              }}</span>
+              <span [ngClass]="getSortIconColor('age')" class="ml-1">{{ getSortIcon('age') }}</span>
             </div>
           </th>
           <th
@@ -72,7 +70,7 @@
             <td class="px-6 py-4 text-sm text-gray-900">{{ house.location }}</td>
             <td class="px-6 py-4 text-sm text-gray-900">{{ house.layout }}</td>
             <td class="px-6 py-4 text-sm font-medium text-gray-900">
-              ¥{{ (house.price_million_yen | number: '1.2-2') }}M
+              ¥{{ house.price_million_yen | number: '1.2-2' }}M
             </td>
             <td class="px-6 py-4 text-sm text-gray-900">{{ house.age_years }}</td>
             <td class="px-6 py-4 text-sm text-gray-900">{{ house.floor }}</td>
